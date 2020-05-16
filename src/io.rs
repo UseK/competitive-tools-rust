@@ -16,3 +16,39 @@ pub fn parse_values<T: std::str::FromStr>(n: usize) -> Vec<T> {
     }
     values
 }
+
+/// Parse stdin into Tuple which has 2 items
+///
+/// # Examples
+///
+/// Basic usage:
+///
+/// ```no_run
+/// use competitive_tools_rust::io::parse_tuple2;
+/// let (a, b) = parse_tuple2::<usize>();
+/// ```
+pub fn parse_tuple2<T: std::str::FromStr>() -> (T, T)
+    where
+        T: Copy
+{
+    let vs = parse_values(2);
+    (vs[0], vs[1])
+}
+
+/// Parse stdin into Tuple which has 2 items
+///
+/// # Examples
+///
+/// Basic usage:
+///
+/// ```no_run
+/// use competitive_tools_rust::io::parse_tuple3;
+/// let (a, b, c) = parse_tuple3::<usize>();
+/// ```
+pub fn parse_tuple3<T: std::str::FromStr>() -> (T, T, T)
+    where
+        T: Copy
+{
+    let vs = parse_values(3);
+    (vs[0], vs[1], vs[2])
+}
