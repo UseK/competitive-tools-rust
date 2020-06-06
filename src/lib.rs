@@ -1,4 +1,5 @@
 pub mod clonetools;
 pub mod io;
-pub mod vectools;
+pub mod math;
 pub mod maze;
+pub mod vectools;
