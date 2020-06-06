@@ -56,9 +56,10 @@ pub fn prime_factors(mut n: usize) -> Vec<usize> {
 /// ```
 pub fn smallest_prime_factor(n: usize) -> Option<usize> {
     if n < 2 { return None }
+    if n % 2 == 0 { return Some(2)}
     let max_sqrt = (n as f64).sqrt().ceil() as usize;
-    for i in 2..=max_sqrt {
-        if n % i == 0 { return Some(i) }
+    for odd in (3..=max_sqrt).step_by(2) {
+        if n % odd == 0 { return Some(odd) }
     }
     Some(n)
 }
