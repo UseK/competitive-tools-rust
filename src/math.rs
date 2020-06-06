@@ -19,6 +19,27 @@ pub fn is_prime(n: usize) -> bool {
 }
 
 /// ```
+/// use competitive_tools_rust::math::prime_factors;
+/// assert_eq!(prime_factors(0), vec![]);
+/// assert_eq!(prime_factors(1), vec![]);
+/// assert_eq!(prime_factors(2), vec![2]);
+/// assert_eq!(prime_factors(24), vec![2, 2, 2, 3]);
+/// assert_eq!(prime_factors(1000000007), vec![1000000007]);
+/// assert_eq!(prime_factors(997764507000), vec![2, 2, 2, 3, 3, 3, 5, 5, 5, 6079, 6079]);
+/// assert_eq!(prime_factors(997764507000), vec![2, 2, 2, 3, 3, 3, 5, 5, 5, 6079, 6079]);
+/// ```
+pub fn prime_factors(mut n: usize) -> Vec<usize> {
+    if n < 2 { return vec![] }
+    let mut factors = vec![];
+    while let Some(i) = min_prime_factor(n) {
+        factors.push(i);
+        n = n / i;
+    }
+    factors.push(n);
+    factors
+}
+
+/// ```
 /// use competitive_tools_rust::math::min_prime_factor;
 /// assert_eq!(min_prime_factor(0), None);
 /// assert_eq!(min_prime_factor(1), None);
