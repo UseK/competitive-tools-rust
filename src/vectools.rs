@@ -36,3 +36,29 @@ pub fn count_items<T>(v: &[T]) -> HashMap<T, usize>
         counter
     })
 }
+
+#[cfg(test)]
+mod tests {
+    use std::collections::HashMap;
+
+    #[test]
+    fn test() {
+        assert_eq!(true, true);
+        let strs = vec![
+            "ab".to_string(),
+            "bc".to_string(),
+            "ab".to_string(),
+            "ab".to_string(),
+        ];
+        let counter = strs.iter().fold(HashMap::new(), |mut counter, s| {
+            *counter.entry(s).or_insert(0) += 1;
+            counter
+        });
+        let mut expected = HashMap::new();
+        let ab = "ab".to_string();
+        let bc = "bc".to_string();
+        expected.insert(&ab, 3);
+        expected.insert(&bc, 1);
+        assert_eq!(counter, expected);
+    }
+}
