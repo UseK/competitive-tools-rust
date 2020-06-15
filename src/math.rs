@@ -63,3 +63,24 @@ pub fn smallest_prime_factor(n: usize) -> Option<usize> {
     }
     Some(n)
 }
+
+/// ```
+/// use competitive_tools_rust::math::sieve_of_eratosthenes;
+/// let primes = sieve_of_eratosthenes(30);
+/// assert_eq!(primes, vec![2, 3, 5, 7,11, 13, 17, 19, 23, 29]);
+/// let primes = sieve_of_eratosthenes(31);
+/// assert_eq!(primes, vec![2, 3, 5, 7,11, 13, 17, 19, 23, 29, 31]);
+/// ```
+pub fn sieve_of_eratosthenes(max_n: usize) -> Vec<usize> {
+    let mut sieve = vec![true; max_n+1];
+    let mut prime_numbers = Vec::with_capacity(max_n / 2);
+    for i in 2..sieve.len() {
+        if sieve[i] {
+            prime_numbers.push(i);
+        }
+        for ind in (i*2..sieve.len()).step_by(i) {
+            sieve[ind] = false;
+        }
+    }
+    prime_numbers
+}
