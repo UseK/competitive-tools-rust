@@ -84,3 +84,33 @@ pub fn sieve_of_eratosthenes(max_n: usize) -> Vec<usize> {
     }
     prime_numbers
 }
+
+pub trait AbsDiff: Copy
+{
+    /// Calc absolute difference
+    fn abs_diff(self, other: Self) -> Self;
+}
+
+impl AbsDiff for usize {
+    /// Calc absolute difference
+    /// It's similar to
+    /// ```not run
+    /// (x - y).abs()
+    /// ```
+    /// but It not consider the case that x - y is minus and when x, y is unsigned integer
+    /// ```
+    /// use competitive_tools_rust::math::AbsDiff;
+    /// assert_eq!(0.abs_diff(0), 0);
+    /// assert_eq!(1.abs_diff(0), 1);
+    /// assert_eq!(0.abs_diff(2), 2);
+    /// assert_eq!(10.abs_diff(100), 90);
+    /// ```
+    fn abs_diff(self, other: Self) -> Self {
+        if self < other {
+            other - self
+        } else {
+            self - other
+        }
+    }
+}
+
