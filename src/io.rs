@@ -28,8 +28,8 @@ pub fn parse_values<T: std::str::FromStr>(n: usize) -> Vec<T> {
 /// let (a, b) = parse_tuple2::<usize>();
 /// ```
 pub fn parse_tuple2<T: std::str::FromStr>() -> (T, T)
-    where
-        T: Copy
+where
+    T: Copy,
 {
     let vs = parse_values(2);
     (vs[0], vs[1])
@@ -46,9 +46,60 @@ pub fn parse_tuple2<T: std::str::FromStr>() -> (T, T)
 /// let (a, b, c) = parse_tuple3::<usize>();
 /// ```
 pub fn parse_tuple3<T: std::str::FromStr>() -> (T, T, T)
-    where
-        T: Copy
+where
+    T: Copy,
 {
     let vs = parse_values(3);
     (vs[0], vs[1], vs[2])
+}
+
+#[macro_export]
+macro_rules! debug {
+    ( $( $x:expr ),* ) => {{
+        let mut s_vec = vec![];
+        $(
+            let s = format!("{}: {:?}", stringify!($x), $x);
+            s_vec.push(s);
+        )*
+        let joined = s_vec.join(", ");
+        println!("{}", joined);
+    }}
+}
+
+#[macro_export]
+macro_rules! debug_str {
+    ( $( $x:expr ),* ) => {{
+        let mut s_vec = vec![];
+        $(
+            let s = format!("{}: {:?}", stringify!($x), $x);
+            s_vec.push(s);
+        )*
+        s_vec.join(", ")
+    }};
+}
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn test_macro_when_primitive() {
+        let five = 5;
+        let result = debug_str!(five);
+        assert_eq!(result, "five: 5");
+    }
+
+    #[test]
+    fn test_macro_when_vec() {
+        let v = vec![2, 5, 8];
+        let result = debug_str!(v);
+        assert_eq!(result, "v: [2, 5, 8]");
+    }
+
+    #[test]
+    fn test_macro_when_multiple() {
+        let x = 2;
+        let y = 9;
+        let result = debug_str!(x, y);
+        assert_eq!(result, "x: 2, y: 9");
+        //debug!(x, y); //=> x: 2, y: 9
+    }
 }
