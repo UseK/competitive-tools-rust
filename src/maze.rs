@@ -38,6 +38,7 @@ impl Maze<bool> {
 
 #[cfg(test)]
 mod tests_maze {
+    //use crate::d;
     use crate::maze::Maze;
 
     #[test]
@@ -56,6 +57,7 @@ mod tests_maze {
             ".W.W......W.".to_string(),
             "..W.......W.".to_string(),
         ];
+        //d!(input_lines);
         let field: Vec<Vec<bool>> = input_lines
             .into_iter()
             .map(|line| line.chars().map(|c| c == 'W').collect())
