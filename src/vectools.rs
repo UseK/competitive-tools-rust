@@ -14,7 +14,7 @@ impl<T> Vectools for Vec<T> {
     /// ```
     fn keep(&mut self, bools: &Vec<bool>) {
         let mut i = 0;
-        self.retain(|_| (bools[i], i +=1).0)
+        self.retain(|_| (bools[i], i += 1).0)
     }
 }
 
@@ -29,9 +29,10 @@ impl<T> Vectools for Vec<T> {
 /// assert_eq!(count_items(&v), expected);
 /// ```
 pub fn count_items<T>(v: &[T]) -> HashMap<T, usize>
-    where T: std::cmp::Eq + std::hash::Hash + Copy
+where
+    T: std::cmp::Eq + std::hash::Hash + Copy,
 {
-    v.iter().fold(HashMap::new(),|mut counter, &item| {
+    v.iter().fold(HashMap::new(), |mut counter, &item| {
         *counter.entry(item).or_insert(0) += 1;
         counter
     })

@@ -31,7 +31,6 @@ where
     }
 }
 
-
 #[allow(dead_code)]
 impl<I> Iterator for PermutationWithReplacement<I>
 where

@@ -55,11 +55,17 @@ pub fn prime_factors(mut n: usize) -> Vec<usize> {
 /// assert_eq!(smallest_prime_factor(997764507000), Some(2));
 /// ```
 pub fn smallest_prime_factor(n: usize) -> Option<usize> {
-    if n < 2 { return None }
-    if n % 2 == 0 { return Some(2)}
+    if n < 2 {
+        return None;
+    }
+    if n % 2 == 0 {
+        return Some(2);
+    }
     let max_sqrt = (n as f64).sqrt().ceil() as usize;
     for odd in (3..=max_sqrt).step_by(2) {
-        if n % odd == 0 { return Some(odd) }
+        if n % odd == 0 {
+            return Some(odd);
+        }
     }
     Some(n)
 }
@@ -72,21 +78,20 @@ pub fn smallest_prime_factor(n: usize) -> Option<usize> {
 /// assert_eq!(primes, vec![2, 3, 5, 7,11, 13, 17, 19, 23, 29, 31]);
 /// ```
 pub fn sieve_of_eratosthenes(max_n: usize) -> Vec<usize> {
-    let mut sieve = vec![true; max_n+1];
+    let mut sieve = vec![true; max_n + 1];
     let mut prime_numbers = Vec::with_capacity(max_n / 2);
     for i in 2..sieve.len() {
         if sieve[i] {
             prime_numbers.push(i);
         }
-        for ind in (i*2..sieve.len()).step_by(i) {
+        for ind in (i * 2..sieve.len()).step_by(i) {
             sieve[ind] = false;
         }
     }
     prime_numbers
 }
 
-pub trait AbsDiff: Copy
-{
+pub trait AbsDiff: Copy {
     /// Calc absolute difference
     fn abs_diff(self, other: Self) -> Self;
 }
@@ -113,4 +118,3 @@ impl AbsDiff for usize {
         }
     }
 }
-

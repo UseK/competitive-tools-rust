@@ -1,13 +1,12 @@
 pub struct UnionFindTree {
-    parents: Vec<usize>
+    parents: Vec<usize>,
 }
 
 impl UnionFindTree {
     pub fn new(n: usize) -> Self {
         let parents = (0..n).map(|i| i).collect::<Vec<usize>>();
-        UnionFindTree {parents}
+        UnionFindTree { parents }
     }
-
 
     /// Get root with compressing path
     pub fn root(&mut self, x: usize) -> usize {
@@ -15,7 +14,7 @@ impl UnionFindTree {
         let mut current_x = x;
         loop {
             if current_x == self.parents[current_x] {
-                break
+                break;
             } else {
                 paths.push(current_x);
                 current_x = self.parents[current_x];
