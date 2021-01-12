@@ -54,7 +54,7 @@ where
 }
 
 #[macro_export]
-macro_rules! debug {
+macro_rules! d {
     ( $( $x:expr ),* ) => {{
         let mut s_vec = vec![];
         $(
@@ -100,6 +100,6 @@ mod tests {
         let y = 9;
         let result = debug_str!(x, y);
         assert_eq!(result, "x: 2, y: 9");
-        //debug!(x, y); //=> x: 2, y: 9
+        //d!(x, y); //=> x: 2, y: 9
     }
 }
