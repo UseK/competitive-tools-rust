@@ -66,3 +66,30 @@ impl<T: Ord> BinarySearch<T> for [T] {
         rec(self, x, 0, self.len())
     }
 }
+
+///
+/// ```
+/// use competitive_tools_rust::search::bound;
+/// assert_eq!(bound(0, 100, |i| i * i <= 48), 6);
+/// assert_eq!(bound(0, 100, |i| i * i <= 49), 7);
+/// assert_eq!(bound(0, 100, |i| i * i <= 50), 7);
+/// assert_eq!(bound(0, 100, |i| i * i < 48), 6);
+/// assert_eq!(bound(0, 100, |i| i * i < 49), 6);
+/// assert_eq!(bound(0, 100, |i| i * i < 50), 7);
+/// ```
+pub fn bound<F>(min: isize, max: isize, condition: F) -> isize
+where
+    F: Fn(isize) -> bool,
+{
+    let mut ok = min;
+    let mut ng = max;
+    while (ng - ok).abs() > 1 {
+        let mid = (ok + ng) / 2;
+        if condition(mid) {
+            ok = mid;
+        } else {
+            ng = mid;
+        }
+    }
+    ok
+}
