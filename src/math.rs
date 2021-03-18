@@ -34,7 +34,7 @@ pub fn prime_factors(mut n: usize) -> Vec<usize> {
     let mut factors = vec![];
     while let Some(i) = smallest_prime_factor(n) {
         factors.push(i);
-        n = n / i;
+        n /= i;
     }
     factors
 }

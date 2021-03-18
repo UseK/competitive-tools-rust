@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 pub trait Vectools {
-    fn keep(&mut self, bools: &Vec<bool>);
+    fn keep(&mut self, bools: &[bool]);
 }
 
 impl<T> Vectools for Vec<T> {
@@ -12,9 +12,13 @@ impl<T> Vectools for Vec<T> {
     /// v.keep(&bools);
     /// assert_eq!(v, vec![2, 3, 5]);
     /// ```
-    fn keep(&mut self, bools: &Vec<bool>) {
+    fn keep(&mut self, bools: &[bool]) {
         let mut i = 0;
-        self.retain(|_| (bools[i], i += 1).0)
+        self.retain(|_| {
+            let flag = bools[i];
+            i += 1;
+            flag
+        })
     }
 }
 
