@@ -68,29 +68,31 @@ impl<T: Ord> BinarySearch<T> for [T] {
 }
 
 ///
-/// Return maximum number to meet the conditions
+/// Return pair of
+/// ( maximum number i in F(i) = false,
+///   minimum number j in F(j) = true)
 /// ```
 /// use competitive_tools_rust::search::bound;
-/// assert_eq!(bound(0, 100, |i| i * i < 48), 6);
-/// assert_eq!(bound(0, 100, |i| i * i <= 48), 6);
-/// assert_eq!(bound(0, 100, |i| i * i < 49), 6);
-/// assert_eq!(bound(0, 100, |i| i * i <= 49), 7);
-/// assert_eq!(bound(0, 100, |i| i * i < 50), 7);
-/// assert_eq!(bound(0, 100, |i| i * i <= 50), 7);
+/// assert_eq!(bound(0, 100, |i| i * i >= 48), (6, 7));
+/// assert_eq!(bound(0, 100, |i| i * i >  48), (6, 7));
+/// assert_eq!(bound(0, 100, |i| i * i >= 49), (6, 7));
+/// assert_eq!(bound(0, 100, |i| i * i >  49), (7, 8));
+/// assert_eq!(bound(0, 100, |i| i * i >= 50), (7, 8));
+/// assert_eq!(bound(0, 100, |i| i * i >  50), (7, 8));
 /// ```
-pub fn bound<F>(ok_min: isize, ng_max: isize, condition: F) -> isize
+pub fn bound<F>(ng_min: isize, ok_max: isize, condition: F) -> (isize, isize)
 where
     F: Fn(isize) -> bool,
 {
-    let mut ok = ok_min;
-    let mut ng = ng_max;
-    while (ng - ok).abs() > 1 {
-        let mid = (ok + ng) / 2;
+    let mut ng = ng_min;
+    let mut ok = ok_max;
+    while (ok - ng).abs() > 1 {
+        let mid = (ng + ok) / 2;
         if condition(mid) {
             ok = mid;
         } else {
             ng = mid;
         }
     }
-    ok
+    (ng, ok)
 }
