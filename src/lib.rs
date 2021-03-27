@@ -1,4 +1,5 @@
 #[macro_use]
+pub mod bitset;
 pub mod clonetools;
 pub mod graph;
 pub mod io;
