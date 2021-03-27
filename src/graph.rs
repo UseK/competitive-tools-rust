@@ -35,3 +35,37 @@ impl DAG {
         rev_order.push(i);
     }
 }
+
+use std::cmp::Reverse;
+use std::collections::BinaryHeap;
+
+#[derive(Copy, Clone, Debug, Ord, PartialOrd, Eq, PartialEq)]
+pub struct Edge {
+    to: usize,
+    cost: usize,
+}
+
+/// (distance, from_path)
+#[derive(Copy, Clone, Debug, Ord, PartialOrd, Eq, PartialEq)]
+struct Pair(usize, usize);
+
+pub fn dijkstra(s: usize, max_v: usize, edges_list: &[Vec<Edge>]) -> Vec<Option<usize>> {
+    let mut que = BinaryHeap::new();
+    let mut min_dists: Vec<Option<usize>> = (0..max_v).map(|_| None).collect();
+    min_dists[s] = Some(0);
+    que.push(Reverse(Pair(0, s)));
+    while let Some(Reverse(p)) = que.pop() {
+        let v = p.1;
+        if min_dists[v].unwrap() < p.0 {
+            continue;
+        };
+        for e in &edges_list[v] {
+            let candidate_dist = min_dists[v].unwrap() + e.cost;
+            if candidate_dist < min_dists[e.to].unwrap_or(std::usize::MAX) {
+                min_dists[e.to] = Some(candidate_dist);
+                que.push(Reverse(Pair(candidate_dist, e.to)));
+            }
+        }
+    }
+    min_dists
+}
