@@ -53,6 +53,24 @@ where
     (vs[0], vs[1], vs[2])
 }
 
+/// Parse stdin into Tuple which has 2 items
+///
+/// # Examples
+///
+/// Basic usage:
+///
+/// ```no_run
+/// use competitive_tools_rust::io::parse_tuple4;
+/// let (a, b, c) = parse_tuple4::<usize>();
+/// ```
+pub fn parse_tuple4<T: std::str::FromStr>() -> (T, T, T, T)
+where
+    T: Copy,
+{
+    let vs = parse_values(4);
+    (vs[0], vs[1], vs[2], vs[3])
+}
+
 #[macro_export]
 macro_rules! d {
     ( $( $x:expr ),* ) => {{
