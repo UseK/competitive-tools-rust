@@ -61,7 +61,7 @@ where
 ///
 /// ```no_run
 /// use competitive_tools_rust::io::parse_tuple4;
-/// let (a, b, c) = parse_tuple4::<usize>();
+/// let (a, b, c, d) = parse_tuple4::<usize>();
 /// ```
 pub fn parse_tuple4<T: std::str::FromStr>() -> (T, T, T, T)
 where
