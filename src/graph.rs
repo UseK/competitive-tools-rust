@@ -1,17 +1,17 @@
 /// Directed Acyclic Graph
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct DAG {
+pub struct Dag {
     /// The number of Vertex
     pub n: usize,
-    /// adjacency_list[i] returns edges from i vertex
+    /// adjacency_list\[i\] returns edges from i vertex
     pub adjacency_list: Vec<Vec<usize>>,
 }
 
-impl DAG {
+impl Dag {
     /// Returns vertexes in topologically sorted order
     /// ```
-    /// use competitive_tools_rust::graph::DAG;
-    /// let dag = DAG { n: 3, adjacency_list: vec![vec![], vec![2], vec![0]] };
+    /// use competitive_tools_rust::graph::Dag;
+    /// let dag = Dag { n: 3, adjacency_list: vec![vec![], vec![2], vec![0]] };
     /// assert_eq!(dag.topological_sort(), vec![1, 2, 0]);
     /// ```
     pub fn topological_sort(&self) -> Vec<usize> {
@@ -41,8 +41,8 @@ use std::collections::BinaryHeap;
 
 #[derive(Copy, Clone, Debug, Ord, PartialOrd, Eq, PartialEq)]
 pub struct Edge {
-    to: usize,
-    cost: usize,
+    pub to: usize,
+    pub cost: usize,
 }
 
 /// (distance, from_path)
@@ -61,7 +61,7 @@ pub fn dijkstra(s: usize, max_v: usize, edges_list: &[Vec<Edge>]) -> Vec<Option<
         };
         for e in &edges_list[v] {
             let candidate_dist = min_dists[v].unwrap() + e.cost;
-            if candidate_dist < min_dists[e.to].unwrap_or(std::usize::MAX) {
+            if candidate_dist < min_dists[e.to].unwrap_or(usize::MAX) {
                 min_dists[e.to] = Some(candidate_dist);
                 que.push(Reverse(Pair(candidate_dist, e.to)));
             }
