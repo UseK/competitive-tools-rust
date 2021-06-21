@@ -118,3 +118,32 @@ impl AbsDiff for usize {
         }
     }
 }
+
+pub trait Gcd: Copy {
+    /// Calc GCD (Greatest Common Divisor)
+    fn gcd(self, other: Self) -> Self;
+}
+
+impl Gcd for usize {
+    ///
+    /// ```
+    /// use competitive_tools_rust::math::Gcd;
+    /// assert_eq!(24.gcd(32), 8);
+    /// assert_eq!(32.gcd(24), 8);
+    /// assert_eq!(1.gcd(7), 1);
+    /// assert_eq!(7.gcd(1), 1);
+    /// assert_eq!(0.gcd(99), 99);
+    /// assert_eq!(99.gcd(0), 99);
+    /// assert_eq!(0.gcd(0), 0);
+    /// ```
+    fn gcd(self, other: Self) -> Self {
+        fn rec(a: usize, b: usize) -> usize {
+            if b == 0 {
+                a
+            } else {
+                rec(b, a % b)
+            }
+        }
+        rec(self, other)
+    }
+}
