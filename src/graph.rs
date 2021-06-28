@@ -69,3 +69,70 @@ pub fn dijkstra(s: usize, max_v: usize, edges_list: &[Vec<Edge>]) -> Vec<Option<
     }
     min_dists
 }
+
+pub trait BipartiteGraph {
+    fn bi_partition(&self) -> (Vec<usize>, Vec<usize>);
+}
+
+impl BipartiteGraph for Vec<Vec<usize>> {
+    ///
+    /// Partition bipartite graph into two vertex ids.
+    /// ```
+    /// use competitive_tools_rust::graph::BipartiteGraph;
+    /// // 0
+    /// // |
+    /// // 1--3
+    /// // |
+    /// // 2
+    /// let adjacency_list: Vec<Vec<usize>> = vec![
+    ///     vec![1],
+    ///     vec![0, 2, 3],
+    ///     vec![1],
+    ///     vec![1],
+    /// ];
+    /// assert_eq!(adjacency_list.bi_partition(), (vec![0, 2, 3], vec![1]));
+    /// // 0
+    /// // |
+    /// // 2--5
+    /// // |
+    /// // 4
+    /// // |
+    /// // 1
+    /// // |
+    /// // 3
+    /// let adjacency_list: Vec<Vec<usize>> = vec![
+    ///     vec![2],
+    ///     vec![3, 4],
+    ///     vec![0, 4, 5],
+    ///     vec![1],
+    ///     vec![1, 2],
+    ///     vec![2],
+    /// ];
+    /// assert_eq!(adjacency_list.bi_partition(), (vec![0, 3, 4, 5], vec![1, 2]));
+    /// ```
+    fn bi_partition(&self) -> (Vec<usize>, Vec<usize>) {
+        let mut current: Vec<Option<bool>> = vec![None; self.len()];
+        let mut stack: Vec<(usize, bool)> = vec![];
+        current[0] = Some(true);
+        stack.append(&mut self[0].iter().map(|&i| (i, false)).collect());
+
+        while let Some((vertex_id, bi)) = stack.pop() {
+            current[vertex_id] = Some(bi);
+            let nexts = self[vertex_id]
+                .iter()
+                .filter(|&&i| current[i].is_none())
+                .map(|&i| (i, !bi));
+            stack.append(&mut nexts.collect());
+        }
+        let mut x: Vec<usize> = vec![];
+        let mut y: Vec<usize> = vec![];
+        for (ind, bi) in current.iter().enumerate() {
+            if bi.unwrap() {
+                x.push(ind);
+            } else {
+                y.push(ind);
+            }
+        }
+        (x, y)
+    }
+}
