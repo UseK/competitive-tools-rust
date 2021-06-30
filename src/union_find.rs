@@ -4,7 +4,7 @@ pub struct UnionFindTree {
 
 impl UnionFindTree {
     pub fn new(n: usize) -> Self {
-        let parents = (0..n).map(|i| i).collect::<Vec<usize>>();
+        let parents = (0..n).collect();
         UnionFindTree { parents }
     }
 
