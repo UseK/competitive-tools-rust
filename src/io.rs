@@ -25,14 +25,19 @@ pub fn parse_values<T: std::str::FromStr>(n: usize) -> Vec<T> {
 ///
 /// ```no_run
 /// use competitive_tools_rust::io::parse_tuple2;
-/// let (a, b) = parse_tuple2::<usize>();
+/// let (a, b): (usize, usize) = parse_tuple2();
 /// ```
-pub fn parse_tuple2<T: std::str::FromStr>() -> (T, T)
+pub fn parse_tuple2<T1, T2>() -> (T1, T2)
 where
-    T: Copy,
+    T1: std::str::FromStr,
+    T2: std::str::FromStr,
 {
-    let vs = parse_values(2);
-    (vs[0], vs[1])
+    let line: String = parse_line();
+    let mut split = line.split_whitespace();
+    (
+        split.next().unwrap().parse::<T1>().ok().unwrap(),
+        split.next().unwrap().parse::<T2>().ok().unwrap(),
+    )
 }
 
 /// Parse stdin into Tuple which has 2 items
@@ -43,14 +48,21 @@ where
 ///
 /// ```no_run
 /// use competitive_tools_rust::io::parse_tuple3;
-/// let (a, b, c) = parse_tuple3::<usize>();
+/// let (a, b, c): (String, usize, isize) = parse_tuple3();
 /// ```
-pub fn parse_tuple3<T: std::str::FromStr>() -> (T, T, T)
+pub fn parse_tuple3<T1, T2, T3>() -> (T1, T2, T3)
 where
-    T: Copy,
+    T1: std::str::FromStr,
+    T2: std::str::FromStr,
+    T3: std::str::FromStr,
 {
-    let vs = parse_values(3);
-    (vs[0], vs[1], vs[2])
+    let line: String = parse_line();
+    let mut split = line.split_whitespace();
+    (
+        split.next().unwrap().parse::<T1>().ok().unwrap(),
+        split.next().unwrap().parse::<T2>().ok().unwrap(),
+        split.next().unwrap().parse::<T3>().ok().unwrap(),
+    )
 }
 
 /// Parse stdin into Tuple which has 2 items
@@ -61,14 +73,23 @@ where
 ///
 /// ```no_run
 /// use competitive_tools_rust::io::parse_tuple4;
-/// let (a, b, c, d) = parse_tuple4::<usize>();
+/// let (a, b, c, d): (usize, usize, usize, usize) = parse_tuple4();
 /// ```
-pub fn parse_tuple4<T: std::str::FromStr>() -> (T, T, T, T)
+pub fn parse_tuple4<T1, T2, T3, T4>() -> (T1, T2, T3, T4)
 where
-    T: Copy,
+    T1: std::str::FromStr,
+    T2: std::str::FromStr,
+    T3: std::str::FromStr,
+    T4: std::str::FromStr,
 {
-    let vs = parse_values(4);
-    (vs[0], vs[1], vs[2], vs[3])
+    let line: String = parse_line();
+    let mut split = line.split_whitespace();
+    (
+        split.next().unwrap().parse::<T1>().ok().unwrap(),
+        split.next().unwrap().parse::<T2>().ok().unwrap(),
+        split.next().unwrap().parse::<T3>().ok().unwrap(),
+        split.next().unwrap().parse::<T4>().ok().unwrap(),
+    )
 }
 
 #[macro_export]
