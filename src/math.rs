@@ -152,7 +152,7 @@ impl Gcd for usize {
 
 /// Used in 069 - Colorful Blocks 2
 /// https://atcoder.jp/contests/typical90/tasks/typical90_bq
-trait ModPow {
+pub trait ModPow {
     /// Returns Modular Exponentiation  with
     fn mod_pow(self, exp: Self, m: Self) -> Self;
 }
