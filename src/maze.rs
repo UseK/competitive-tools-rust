@@ -1,3 +1,5 @@
+use crate::io::parse_line;
+
 pub struct Maze<T> {
     rows: usize,
     columns: usize,
@@ -34,6 +36,46 @@ impl Maze<bool> {
         }
         positions
     }
+}
+
+pub fn parse_maze(h: usize, wall_ch: char) -> Vec<Vec<bool>> {
+    (0..h)
+        .map(|_| {
+            parse_line::<String>()
+                .chars()
+                .map(|s| s != wall_ch)
+                .collect()
+        })
+        .collect()
+}
+
+/// ```
+/// use competitive_tools_rust::maze::surround_wall;
+/// let mut maze = vec![vec![true]];
+/// surround_wall(&mut maze);
+/// assert_eq!(maze, vec![
+///     vec![false, false, false],
+///     vec![false, true, false],
+///     vec![false, false, false],
+/// ])
+///
+/// ```
+pub fn surround_wall(maze: &mut Vec<Vec<bool>>) {
+    maze.iter_mut().for_each(|line| {
+        line.insert(0, false);
+        line.push(false);
+    });
+    let n_line = maze[0].len();
+    maze.insert(0, vec![false; n_line]);
+    maze.push(vec![false; n_line]);
+}
+
+#[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord)]
+pub enum Direction {
+    Up,
+    Down,
+    Left,
+    Right,
 }
 
 #[cfg(test)]
