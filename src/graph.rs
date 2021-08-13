@@ -1,37 +1,36 @@
 /// Directed Acyclic Graph
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct Dag {
-    /// adjacency_list\[i\] returns edges from i vertex
-    /// The number of Vertex is self.adjacency_list.len()
-    pub adjacency_list: Vec<Vec<usize>>,
+pub trait Dag {
+    /// Returns vertexes in topologically sorted order
+    fn topological_sort(&self) -> Vec<usize>;
 }
 
-impl Dag {
+/// self\[i\] returns edges from i vertex
+/// The number of Vertex is self.len()
+impl Dag for Vec<Vec<usize>> {
     /// Returns vertexes in topologically sorted order
     /// ```
     /// use competitive_tools_rust::graph::Dag;
-    /// let dag = Dag { adjacency_list: vec![vec![], vec![2], vec![0]] };
+    /// let dag = vec![vec![], vec![2], vec![0]];
     /// assert_eq!(dag.topological_sort(), vec![1, 2, 0]);
     /// ```
-    pub fn topological_sort(&self) -> Vec<usize> {
-        let mut seen: Vec<bool> = vec![false; self.adjacency_list.len()];
+    fn topological_sort(&self) -> Vec<usize> {
+        fn dfs(me: &[Vec<usize>], seen: &mut Vec<bool>, i: usize, rev_order: &mut Vec<usize>) {
+            seen[i] = true;
+            me[i].iter().for_each(|&to| {
+                if !seen[to] {
+                    dfs(&me, seen, to, rev_order);
+                }
+            });
+            rev_order.push(i);
+        }
+        let mut seen: Vec<bool> = vec![false; self.len()];
         let mut rev_order: Vec<usize> = vec![];
-        for i in 0..self.adjacency_list.len() {
+        for i in 0..self.len() {
             if !seen[i] {
-                self.dfs(&mut seen, i, &mut rev_order);
+                dfs(&self, &mut seen, i, &mut rev_order);
             }
         }
         rev_order.into_iter().rev().collect()
-    }
-
-    fn dfs(&self, seen: &mut Vec<bool>, i: usize, rev_order: &mut Vec<usize>) {
-        seen[i] = true;
-        self.adjacency_list[i].iter().for_each(|&to| {
-            if !seen[to] {
-                self.dfs(seen, to, rev_order);
-            }
-        });
-        rev_order.push(i);
     }
 }
 
@@ -135,19 +134,3 @@ impl BipartiteGraph for Vec<Vec<usize>> {
         (x, y)
     }
 }
-
-// 強連結成分 (Strongly Connected Component)
-// https://atcoder.jp/contests/typical90/tasks/typical90_u
-// fn scc(edges_list: &[Vec<usize>]) -> Vec<usize> {
-//     let rev_edges_list =
-//
-// }
-//
-// fn rev_edges_list(edges_list: &[Vec<usize>]) -> Vec<Vec<usize>> {
-//     let mut rev = vec![vec![]; edges_list.len()];
-//     for edges in edges_list {
-//         Gk
-//     }
-//     rev
-//
-// }
