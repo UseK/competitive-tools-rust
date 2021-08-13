@@ -1,9 +1,8 @@
 /// Directed Acyclic Graph
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Dag {
-    /// The number of Vertex
-    pub n: usize,
     /// adjacency_list\[i\] returns edges from i vertex
+    /// The number of Vertex is self.adjacency_list.len()
     pub adjacency_list: Vec<Vec<usize>>,
 }
 
@@ -11,13 +10,13 @@ impl Dag {
     /// Returns vertexes in topologically sorted order
     /// ```
     /// use competitive_tools_rust::graph::Dag;
-    /// let dag = Dag { n: 3, adjacency_list: vec![vec![], vec![2], vec![0]] };
+    /// let dag = Dag { adjacency_list: vec![vec![], vec![2], vec![0]] };
     /// assert_eq!(dag.topological_sort(), vec![1, 2, 0]);
     /// ```
     pub fn topological_sort(&self) -> Vec<usize> {
-        let mut seen: Vec<bool> = vec![false; self.n];
+        let mut seen: Vec<bool> = vec![false; self.adjacency_list.len()];
         let mut rev_order: Vec<usize> = vec![];
-        for i in 0..self.n {
+        for i in 0..self.adjacency_list.len() {
             if !seen[i] {
                 self.dfs(&mut seen, i, &mut rev_order);
             }
@@ -136,3 +135,19 @@ impl BipartiteGraph for Vec<Vec<usize>> {
         (x, y)
     }
 }
+
+// 強連結成分 (Strongly Connected Component)
+// https://atcoder.jp/contests/typical90/tasks/typical90_u
+// fn scc(edges_list: &[Vec<usize>]) -> Vec<usize> {
+//     let rev_edges_list =
+//
+// }
+//
+// fn rev_edges_list(edges_list: &[Vec<usize>]) -> Vec<Vec<usize>> {
+//     let mut rev = vec![vec![]; edges_list.len()];
+//     for edges in edges_list {
+//         Gk
+//     }
+//     rev
+//
+// }
