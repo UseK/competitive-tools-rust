@@ -4,16 +4,19 @@ pub trait Dag {
     fn topological_sort(&self) -> Vec<usize>;
 }
 
+/// Vec<Vec<usize>> as Adjacency List
 /// self\[i\] returns edges from i vertex
 /// The number of Vertex is self.len()
 impl Dag for Vec<Vec<usize>> {
     /// Returns vertexes in topologically sorted order
     /// ```
     /// use competitive_tools_rust::graph::Dag;
+    /// // 1 -> 2 -> 0
     /// let dag = vec![vec![], vec![2], vec![0]];
     /// assert_eq!(dag.topological_sort(), vec![1, 2, 0]);
     /// ```
     fn topological_sort(&self) -> Vec<usize> {
+        /// post-order Depth First Search
         fn dfs(me: &[Vec<usize>], seen: &mut Vec<bool>, i: usize, rev_order: &mut Vec<usize>) {
             seen[i] = true;
             me[i].iter().for_each(|&to| {
@@ -31,6 +34,76 @@ impl Dag for Vec<Vec<usize>> {
             }
         }
         rev_order.into_iter().rev().collect()
+    }
+}
+
+pub trait AdjacencyList {
+    fn rev_edge_direction(&self) -> Self;
+    fn from_atcoder_tuples(n: usize, tuples: &[(usize, usize)]) -> Self;
+}
+
+impl AdjacencyList for Vec<Vec<usize>> {
+    /// Reverse the direction of all edges
+    /// ```
+    /// use competitive_tools_rust::graph::AdjacencyList;
+    /// // 0 <=> 1 => 2 <- 3
+    /// // ^               ^
+    /// // ||=============||
+    /// let adjacency_list = vec![
+    ///     vec![1, 3],
+    ///     vec![0, 2, 2],
+    ///     vec![],
+    ///     vec![2, 0],
+    /// ];
+    /// // 0 <=> 1 <= 2 -> 3
+    /// // ^               ^
+    /// // ||=============||
+    /// assert_eq!(adjacency_list.rev_edge_direction(), vec![
+    ///     vec![1, 3],
+    ///     vec![0],
+    ///     vec![1, 1, 3],
+    ///     vec![0],
+    /// ]);
+    ///
+    /// ```
+    fn rev_edge_direction(&self) -> Self {
+        let mut reversed: Self = vec![vec![]; self.len()];
+        self.iter()
+            .enumerate()
+            .for_each(|(ind, edges)| edges.iter().for_each(|&to| reversed[to].push(ind)));
+        reversed
+    }
+
+    /// ```
+    /// use competitive_tools_rust::graph::AdjacencyList;
+    /// let edges = vec![(1, 2), (2, 1), (2, 3), (4, 3), (4, 1), (1, 4), (2, 3)];
+    /// let adjacency_list: Vec<Vec<usize>> = AdjacencyList::from_atcoder_tuples(4, &edges);
+    /// let expected: Vec<Vec<usize>> = vec![
+    ///     vec![1, 3],
+    ///     vec![0, 2, 2],
+    ///     vec![],
+    ///     vec![2, 0],
+    /// ];
+    /// assert_eq!(adjacency_list, expected);
+    /// ```
+    fn from_atcoder_tuples(n: usize, tuples: &[(usize, usize)]) -> Self {
+        tuples.iter().fold(vec![vec![]; n], |mut acc, edge| {
+            acc[edge.0 - 1].push(edge.1 - 1);
+            acc
+        })
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::graph::{AdjacencyList, Dag};
+
+    #[test]
+    fn test_topological_sort_for_cyclic() {
+        let n = 4;
+        let edges = vec![(1, 2), (2, 1), (2, 3), (4, 3), (4, 1), (1, 4), (2, 3)];
+        let adjacency_list: Vec<Vec<usize>> = AdjacencyList::from_atcoder_tuples(n, &edges);
+        assert_eq!(adjacency_list.topological_sort(), vec![0, 3, 1, 2]);
     }
 }
 
