@@ -40,6 +40,7 @@ impl Dag for Vec<Vec<usize>> {
 pub trait AdjacencyList {
     fn rev_edge_direction(&self) -> Self;
     fn from_atcoder_tuples(n: usize, tuples: &[(usize, usize)]) -> Self;
+    fn strongly_connected_component(&self) -> Vec<usize>;
 }
 
 impl AdjacencyList for Vec<Vec<usize>> {
@@ -91,6 +92,51 @@ impl AdjacencyList for Vec<Vec<usize>> {
             acc[edge.0 - 1].push(edge.1 - 1);
             acc
         })
+    }
+
+    /// ```
+    /// use competitive_tools_rust::graph::AdjacencyList;
+    /// // 0 <=> 1 => 2 <- 3
+    /// // ^               ^
+    /// // ||=============||
+    /// let adjacency_list: Vec<Vec<usize>> = vec![
+    ///     vec![1, 3],
+    ///     vec![0, 2, 2],
+    ///     vec![],
+    ///     vec![2, 0],
+    /// ];
+    /// let scc_order = adjacency_list.strongly_connected_component();
+    /// // [0, 1, 3] -> [2] in SCC order
+    /// assert_eq!(scc_order, vec![0, 0, 1, 0]);
+    /// ```
+    fn strongly_connected_component(&self) -> Vec<usize> {
+        fn dfs(
+            start_id: usize,
+            graph: &[Vec<usize>],
+            seen: &mut Vec<bool>,
+            order: &mut [usize],
+            scc_id: usize,
+        ) {
+            seen[start_id] = true;
+            order[start_id] = scc_id;
+            for &to in &graph[start_id] {
+                if !seen[to] {
+                    dfs(to, graph, seen, order, scc_id);
+                }
+            }
+        }
+        let topological_order = self.topological_sort();
+        let reversed = self.rev_edge_direction();
+        let mut order = vec![0; self.len()];
+        let mut seen: Vec<bool> = vec![false; self.len()];
+        let mut scc_id: usize = 0;
+        for start_id in topological_order {
+            if !seen[start_id] {
+                dfs(start_id, &reversed, &mut seen, &mut order, scc_id);
+                scc_id += 1;
+            }
+        }
+        order
     }
 }
 
