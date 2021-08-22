@@ -21,7 +21,7 @@ impl Dag for Vec<Vec<usize>> {
             seen[i] = true;
             me[i].iter().for_each(|&to| {
                 if !seen[to] {
-                    dfs(&me, seen, to, rev_order);
+                    dfs(me, seen, to, rev_order);
                 }
             });
             rev_order.push(i);
