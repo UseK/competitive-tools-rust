@@ -167,6 +167,25 @@ mod tests {
         let adjacency_list: Vec<Vec<usize>> = AdjacencyList::from_atcoder_tuples(n, &edges);
         assert_eq!(adjacency_list.topological_sort(), vec![3, 2, 1, 0]);
     }
+
+    fn scc_cmp(n: usize, edges: Vec<(usize, usize)>, result: Vec<usize>) {
+        let adjacency_list: Vec<Vec<usize>> = AdjacencyList::from_atcoder_tuples(n, &edges);
+        assert_eq!(adjacency_list.strongly_connected_component(), result,);
+    }
+
+    #[test]
+    fn test_strongly_connected_component_for_one_hub() {
+        scc_cmp(
+            4,
+            vec![(1, 2), (2, 1), (1, 3), (3, 1), (1, 4)],
+            vec![0, 0, 0, 1],
+        );
+        scc_cmp(
+            4,
+            vec![(1, 2), (2, 1), (1, 3), (3, 1), (4, 1)],
+            vec![1, 1, 1, 0],
+        );
+    }
 }
 
 use std::cmp::Reverse;
