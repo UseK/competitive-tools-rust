@@ -30,7 +30,7 @@ impl Dag for Vec<Vec<usize>> {
         let mut rev_order: Vec<usize> = vec![];
         for i in 0..self.len() {
             if !seen[i] {
-                dfs(&self, &mut seen, i, &mut rev_order);
+                dfs(self, &mut seen, i, &mut rev_order);
             }
         }
         rev_order.into_iter().rev().collect()
