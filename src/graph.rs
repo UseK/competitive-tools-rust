@@ -151,6 +151,22 @@ mod tests {
         let adjacency_list: Vec<Vec<usize>> = AdjacencyList::from_atcoder_tuples(n, &edges);
         assert_eq!(adjacency_list.topological_sort(), vec![0, 3, 1, 2]);
     }
+
+    #[test]
+    fn test_topological_sort_for_cyclic2() {
+        let n = 3;
+        let edges = vec![(1, 2), (2, 3), (3, 1)];
+        let adjacency_list: Vec<Vec<usize>> = AdjacencyList::from_atcoder_tuples(n, &edges);
+        assert_eq!(adjacency_list.topological_sort(), vec![0, 1, 2]);
+    }
+
+    #[test]
+    fn test_topological_sort_for_one_edge() {
+        let n = 4;
+        let edges = vec![(2, 1)];
+        let adjacency_list: Vec<Vec<usize>> = AdjacencyList::from_atcoder_tuples(n, &edges);
+        assert_eq!(adjacency_list.topological_sort(), vec![3, 2, 1, 0]);
+    }
 }
 
 use std::cmp::Reverse;
