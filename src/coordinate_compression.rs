@@ -32,3 +32,24 @@ pub fn compression_map(mut values: Vec<usize>) -> (Vec<Option<usize>>, usize) {
     );
     (compression_map, values.len())
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::coordinate_compression::compress;
+    use itertools::Itertools;
+    use std::iter::once;
+
+    #[test]
+    /// https://atcoder.jp/contests/typical90/tasks/typical90_ac
+    /// 029 - Long Bricks（★5）
+    fn test_with_typical90_029_long_bricks() {
+        let lr = vec![(27, 100), (8, 39), (83, 97), (24, 75)];
+        let values: Vec<usize> = lr
+            .into_iter()
+            .flat_map(|(x, y)| once(x).chain(once(y)))
+            .collect();
+        let (compressed_values, _) = compress(values);
+        let compressed_lr: Vec<(usize, usize)> = compressed_values.into_iter().tuples().collect();
+        assert_eq!(compressed_lr, vec![(2, 7), (0, 3), (5, 6), (1, 4)])
+    }
+}
