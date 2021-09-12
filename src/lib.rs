@@ -1,6 +1,7 @@
 #[macro_use]
 pub mod bitset;
 pub mod clonetools;
+pub mod coordinate_compression;
 pub mod graph;
 pub mod io;
 pub mod math;
