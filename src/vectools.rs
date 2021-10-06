@@ -48,7 +48,6 @@ mod tests {
 
     #[test]
     fn test() {
-        assert_eq!(true, true);
         let strs = vec![
             "ab".to_string(),
             "bc".to_string(),
