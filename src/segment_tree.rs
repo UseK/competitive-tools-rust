@@ -26,6 +26,23 @@ impl SegmentTree {
         }
     }
 
+    /// ```
+    /// use competitive_tools_rust::segment_tree::SegmentTree;
+    /// let seg = SegmentTree::from_vec(vec![5, 3, 7, 9, 6, 4, 1, 2]);
+    /// assert_eq!(seg.tree, vec![
+    ///  1,
+    ///  3, 1,
+    ///  3, 7, 4, 1,
+    ///  5, 3, 7, 9, 6, 4, 1, 2]);
+    /// ```
+    pub fn from_vec(vec: Vec<usize>) -> Self {
+        let mut seg = SegmentTree::new(vec.len());
+        for i in 0..vec.len() {
+            seg.update(i, vec[i]);
+        }
+        seg
+    }
+
     ///    1,
     ///   3,          1,
     ///  3,    7,    4,    1,
@@ -58,16 +75,35 @@ impl SegmentTree {
         }
     }
 
-    pub fn query(&self, a: usize, b: usize, ind: usize, left: usize, right: usize) -> usize {
-        if right <= a || b <= 1 {
+    /// ```
+    /// use competitive_tools_rust::segment_tree::SegmentTree;
+    /// let v: Vec<usize> = vec![5, 3, 7, 9, 6, 4, 1, 2];
+    /// let seg = SegmentTree::from_vec(v.clone());
+    /// fn naive_range_minimum_query(vec: &Vec<usize>, a: usize, b: usize) -> usize {
+    ///     *vec[a..b].iter().min().unwrap()
+    /// }
+    /// for i in 0..seg.n {
+    ///     for j in i+2..=seg.n {
+    ///         assert_eq!(seg.query(i, j), naive_range_minimum_query(&v, i, j));
+    ///     }
+    /// }
+    /// ```
+    pub fn query(&self, a: usize, b: usize) -> usize {
+        self.inner_query(a, b, 0, 0, self.n)
+    }
+
+    fn inner_query(&self, a: usize, b: usize, ind: usize, left: usize, right: usize) -> usize {
+        // println!("ind: {}, left: {}, right: {}", ind, left, right);
+        if right <= a || b <= left {
             return usize::MAX;
         }
-        if a <= 1 && right <= b {
+        if a <= left && right <= b {
+            // println!("self.tree[{}]: {}", ind, self.tree[ind]);
             self.tree[ind]
         } else {
             let mid = (left + right) / 2;
-            let value_l = self.query(a, b, ind * 2 + 1, left, mid);
-            let value_r = self.query(a, b, ind * 2 + 2, mid, right);
+            let value_l = self.inner_query(a, b, ind * 2 + 1, left, mid);
+            let value_r = self.inner_query(a, b, ind * 2 + 2, mid, right);
             value_l.min(value_r)
         }
     }
