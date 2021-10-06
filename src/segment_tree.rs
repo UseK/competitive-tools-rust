@@ -1,3 +1,6 @@
+use std::ops::RangeBounds;
+use std::ops::Bound::{ Excluded, Included, Unbounded};
+
 pub struct SegmentTree<T>
 where
     T: core::cmp::Ord,
@@ -93,18 +96,34 @@ where
     /// }
     /// for i in 0..seg.n {
     ///     for j in i+2..=seg.n {
-    ///         assert_eq!(seg.query(i, j), naive_range_minimum_query(&v, i, j));
+    ///         assert_eq!(seg.query(i..j), naive_range_minimum_query(&v, i, j));
     ///     }
     /// }
     ///
     /// let char_vec: Vec<char> = vec!['b', 'c', 'a', 'd'];
     /// let char_seg = SegmentTree::from_vec(char_vec.clone(), char::MAX);
-    /// assert_eq!(char_seg.query(0, 1), 'b');
-    /// assert_eq!(char_seg.query(0, 2), 'b');
-    /// assert_eq!(char_seg.query(1, 4), 'a');
-    /// assert_eq!(char_seg.query(0, 4), 'a');
+    /// assert_eq!(char_seg.query(0..1), 'b');
+    /// assert_eq!(char_seg.query(0..2), 'b');
+    /// assert_eq!(char_seg.query(1..4), 'a');
+    /// assert_eq!(char_seg.query(0..4), 'a');
+    /// assert_eq!(char_seg.query(0..99), 'a');
+    /// assert_eq!(char_seg.query(0..0), '\u{10ffff}');
+    /// assert_eq!(char_seg.query(..), 'a');
+    /// assert_eq!(char_seg.query(0..=1), 'b');
+    /// assert_eq!(char_seg.query(0..=2), 'a');
+    /// assert_eq!(char_seg.query(0..=3), 'a');
     /// ```
-    pub fn query(&self, a: usize, b: usize) -> T {
+    pub fn query<R: RangeBounds<usize>>(&self, range: R) -> T {
+        let a = match range.start_bound() {
+            Unbounded => 0,
+            Included(&x) => x,
+            Excluded(&x) => x + 1,
+        };
+        let b = match range.end_bound() {
+            Excluded(&x) => x,
+            Included(&x) => x + 1,
+            Unbounded => self.n,
+        };
         self.inner_query(a, b, 0, 0, self.n)
     }
 
