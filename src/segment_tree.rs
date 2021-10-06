@@ -1,5 +1,5 @@
+use std::ops::Bound::{Excluded, Included, Unbounded};
 use std::ops::RangeBounds;
-use std::ops::Bound::{ Excluded, Included, Unbounded};
 
 pub struct SegmentTree<T>
 where
