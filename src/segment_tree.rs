@@ -31,7 +31,7 @@ where
         SegmentTree {
             n: actual_n,
             tree: (0..actual_n * 2 - 1).map(|_| max_item).collect(),
-            max_item: max_item,
+            max_item,
         }
     }
 
@@ -46,9 +46,9 @@ where
     /// ```
     pub fn from_vec(vec: Vec<T>, max_item: T) -> Self {
         let mut seg = SegmentTree::new(vec.len(), max_item);
-        for i in 0..vec.len() {
+        (0..vec.len()).for_each(|i| {
             seg.update(i, vec[i]);
-        }
+        });
         seg
     }
 
@@ -96,7 +96,7 @@ where
     ///         assert_eq!(seg.query(i, j), naive_range_minimum_query(&v, i, j));
     ///     }
     /// }
-    /// 
+    ///
     /// let char_vec: Vec<char> = vec!['b', 'c', 'a', 'd'];
     /// let char_seg = SegmentTree::from_vec(char_vec.clone(), char::MAX);
     /// assert_eq!(char_seg.query(0, 1), 'b');
