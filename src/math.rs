@@ -168,7 +168,7 @@ impl ModDiv for usize {
     /// assert_eq!(10.mod_div(1, 101), (10 / 1) % 101);
     /// assert_eq!(10.mod_div(2, 101), (10 / 2) % 101);
     /// assert_eq!(10.mod_div(5, 101), (10 / 5) % 101);
-    /// 
+    ///
     /// assert_eq!(
     ///     18_000_000_000_000_000_000.mod_div(5, 1_000_000_007),
     ///     18_000_000_000_000_000_000 / 5 % 1_000_000_007
@@ -229,7 +229,7 @@ impl ModPow for usize {
     /// // x^(0) == 1
     /// assert_eq!(111.mod_pow(0, 7), 1);
     /// assert_eq!(111.mod_pow(1, 7), 111 % 7);
-    /// 
+    ///
     /// assert_eq!(18_000_000_000_000_000_000.mod_pow(6, 7), 1);
     /// ```
     fn mod_pow(self, exp: Self, m: Self) -> Self {
