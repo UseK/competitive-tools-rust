@@ -150,6 +150,56 @@ impl Gcd for usize {
     }
 }
 
+/// Used 082 - Counting Numbers（★3）
+/// https://atcoder.jp/contests/typical90/tasks/typical90_cd
+pub trait ModDiv: Sized {
+    fn mod_div(self, divisor: Self, p: Self) -> Self;
+    fn checked_mod_div(self, divisor: Self, p: Self) -> Result<Self, String>;
+}
+
+impl ModDiv for usize {
+    /// Multiply inverse element calclated by Fermat's little theorem:  
+    /// a^(p - 1) == 1 (mod p)
+    /// a^(p - 2) == a^(-1) (mod p)
+    /// p must be prime number
+    /// divisor and p must be relatively prime
+    /// ```
+    /// use competitive_tools_rust::math::ModDiv;
+    /// assert_eq!(10.mod_div(1, 101), (10 / 1) % 101);
+    /// assert_eq!(10.mod_div(2, 101), (10 / 2) % 101);
+    /// assert_eq!(10.mod_div(5, 101), (10 / 5) % 101);
+    /// ```
+    fn mod_div(self, divisor: Self, p: Self) -> Self {
+        (self * divisor.mod_pow(p - 2, p)) % p
+    }
+
+    /// Check following
+    /// 1. p must be prime number
+    /// 2. divisor and p must be relatively prime
+    /// ```
+    /// use competitive_tools_rust::math::ModDiv;
+    /// assert_eq!(10.checked_mod_div(1, 101), Ok((10 / 1) % 101));
+    /// assert_eq!(10.checked_mod_div(2, 101), Ok((10 / 2) % 101));
+    /// assert_eq!(10.checked_mod_div(5, 101), Ok((10 / 5) % 101));
+    ///
+    /// assert_eq!(10.checked_mod_div(5, 100), Err("p: 100 is not prime".to_string()));
+    /// assert_eq!(10.checked_mod_div(202, 101), Err("p: 101 and divisor: 202 are not relatively prime".to_string()));
+    /// assert_eq!(202.checked_mod_div(5, 101), Ok(0));
+    /// ```
+    fn checked_mod_div(self, divisor: Self, p: Self) -> Result<Self, String> {
+        if !is_prime(p) {
+            return Err(format!("p: {} is not prime", p));
+        }
+        if p.gcd(divisor) != 1 {
+            return Err(format!(
+                "p: {} and divisor: {} are not relatively prime",
+                p, divisor
+            ));
+        }
+        Ok(self.mod_div(divisor, p))
+    }
+}
+
 /// Used in 069 - Colorful Blocks 2
 /// https://atcoder.jp/contests/typical90/tasks/typical90_bq
 pub trait ModPow {
@@ -158,6 +208,23 @@ pub trait ModPow {
 }
 
 impl ModPow for usize {
+    ///
+    /// ```
+    /// use competitive_tools_rust::math::ModPow;
+    /// // Fermat's little theorem:  a^(p - 1) == 1 (mod p)
+    /// // p is prime number
+    /// assert_eq!(1usize.mod_pow(6, 7), 1);
+    /// assert_eq!(2usize.mod_pow(6, 7), 1);
+    /// assert_eq!(3usize.mod_pow(6, 7), 1);
+    /// assert_eq!(4usize.mod_pow(6, 7), 1);
+    /// assert_eq!(5usize.mod_pow(6, 7), 1);
+    /// assert_eq!(6usize.mod_pow(6, 7), 1);
+    /// assert_eq!(7usize.mod_pow(6, 7), 0);
+    /// assert_eq!(8usize.mod_pow(6, 7), 1);
+    /// // x^(0) == 1
+    /// assert_eq!(111.mod_pow(0, 7), 1);
+    /// assert_eq!(111.mod_pow(1, 7), 111 % 7);
+    /// ```
     fn mod_pow(self, exp: Self, m: Self) -> Self {
         let mut acc = 1;
         let mut current_mod_pow = self % m;
