@@ -19,7 +19,7 @@ jobs:
 
   test:
     name: Test Suite
-    runs-on: [ubuntu-latest, windows-latest, macos-11]
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions-rs/toolchain@v1
