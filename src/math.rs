@@ -294,3 +294,32 @@ mod tests {
         }
     }
 }
+
+pub trait Divisors
+where Self: Sized,
+{
+    fn divisors(&self) -> Vec<Self>;
+}
+
+impl Divisors for usize {
+    /// ```
+    /// use competitive_tools_rust::math::Divisors;
+    /// assert_eq!(1.divisors(), vec![1]);
+    /// assert_eq!(2.divisors(), vec![1, 2]);
+    /// assert_eq!(3.divisors(), vec![1, 3]);
+    /// assert_eq!(4.divisors(), vec![1, 2, 4]);
+    /// assert_eq!(24.divisors(), vec![1, 2, 3, 4, 6, 8, 12, 24]);
+    /// ```
+    fn divisors(&self) -> Vec<Self> {
+        let mut dvs = vec![];
+        for i in 1..=*self {
+            if i * i > *self { break }
+            if *self % i == 0 {
+                dvs.push(i);
+                if i * i != *self { dvs.push(*self / i)}
+            }
+        }
+        dvs.sort_unstable();
+        dvs
+    }
+}
