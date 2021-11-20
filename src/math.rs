@@ -296,7 +296,8 @@ mod tests {
 }
 
 pub trait Divisors
-where Self: Sized,
+where
+    Self: Sized,
 {
     fn divisors(&self) -> Vec<Self>;
 }
@@ -313,10 +314,14 @@ impl Divisors for usize {
     fn divisors(&self) -> Vec<Self> {
         let mut dvs = vec![];
         for i in 1..=*self {
-            if i * i > *self { break }
+            if i * i > *self {
+                break;
+            }
             if *self % i == 0 {
                 dvs.push(i);
-                if i * i != *self { dvs.push(*self / i)}
+                if i * i != *self {
+                    dvs.push(*self / i)
+                }
             }
         }
         dvs.sort_unstable();
