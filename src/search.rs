@@ -67,81 +67,27 @@ impl<T: Ord> BinarySearch<T> for [T] {
     }
 }
 
-///
 /// Return pair of
 /// ( maximum number i in F(i) = false,
 ///   minimum number j in F(j) = true)
 /// ```
 /// use competitive_tools_rust::search::bound;
-/// assert_eq!(bound(0, 100, |i| i * i >= 48), (6, 7));
 /// assert_eq!(bound(0, 100, |i| i * i >  48), (6, 7));
-/// assert_eq!(bound(0, 100, |i| i * i >= 49), (6, 7));
 /// assert_eq!(bound(0, 100, |i| i * i >  49), (7, 8));
-/// assert_eq!(bound(0, 100, |i| i * i >= 50), (7, 8));
 /// assert_eq!(bound(0, 100, |i| i * i >  50), (7, 8));
+/// assert_eq!(bound(-100, -1, |i| i > -10), (-10, -9));
 /// ```
-pub fn bound<F>(ng_min: isize, ok_max: isize, condition: F) -> (isize, isize)
+pub fn bound<T, F>(ng_min: T, ok_max: T, condition: F) -> (T, T)
 where
-    F: Fn(isize) -> bool,
-{
-    assert!(condition(ok_max));
-    assert!(!condition(ng_min));
-    let mut ng = ng_min;
-    let mut ok = ok_max;
-    while (ok - ng).abs() > 1 {
-        let mid = (ng + ok) / 2;
-        if condition(mid) {
-            ok = mid;
-        } else {
-            ng = mid;
-        }
-    }
-    (ng, ok)
-}
-
-///
-/// Return pair of
-/// ( maximum number i in F(i) = false,
-///   minimum number j in F(j) = true)
-/// ```
-/// use competitive_tools_rust::search::bound_usize;
-/// assert_eq!(bound_usize(0, 100, |i| i * i >= 48), (6, 7));
-/// assert_eq!(bound_usize(0, 100, |i| i * i >  48), (6, 7));
-/// assert_eq!(bound_usize(0, 100, |i| i * i >= 49), (6, 7));
-/// assert_eq!(bound_usize(0, 100, |i| i * i >  49), (7, 8));
-/// assert_eq!(bound_usize(0, 100, |i| i * i >= 50), (7, 8));
-/// assert_eq!(bound_usize(0, 100, |i| i * i >  50), (7, 8));
-/// ```
-pub fn bound_usize<F>(ng_min: usize, ok_max: usize, condition: F) -> (usize, usize)
-where
-    F: Fn(usize) -> bool,
-{
-    assert!(condition(ok_max));
-    assert!(!condition(ng_min));
-    let mut ng = ng_min;
-    let mut ok = ok_max;
-    while ok - ng > 1 {
-        let mid = (ng + ok) / 2;
-        if condition(mid) {
-            ok = mid;
-        } else {
-            ng = mid;
-        }
-    }
-    (ng, ok)
-}
-
-pub fn bound_integer<T,F>(ng_min: T, ok_max: T, condition: F) -> (T, T)
-where
-    T: num::Integer + num::Signed,
+    T: num::Integer + num::FromPrimitive + Copy,
     F: Fn(T) -> bool,
 {
     assert!(condition(ok_max));
     assert!(!condition(ng_min));
     let mut ng = ng_min;
     let mut ok = ok_max;
-    while (ok - ng).abs() > T::one() {
-        let mid = (ng + ok).div(2); // expected type parameter `T`, found integer
+    while abs_diff(ok, ng) > T::one() {
+        let mid = (ng + ok).div(T::from_u8(2).unwrap()); // expected type parameter `T`, found integer
         if condition(mid) {
             ok = mid;
         } else {
@@ -151,9 +97,21 @@ where
     (ng, ok)
 }
 
+fn abs_diff<T>(src: T, dst: T) -> T
+where
+    T: num::Integer + num::FromPrimitive,
+{
+    let sub = if src > dst { src - dst } else { dst - src };
+    if sub < T::zero() {
+        sub * T::from_i8(-1).unwrap()
+    } else {
+        sub
+    }
+}
+
 #[cfg(test)]
 mod tests {
-    use crate::search::{bound, bound_usize};
+    use crate::search::bound;
 
     #[test]
     #[should_panic]
@@ -168,14 +126,14 @@ mod tests {
     }
 
     #[test]
-    #[should_panic]
-    fn test_bound_usize_should_panic_when_not_ng_for_min() {
-        bound_usize(50, 100, |i| i * i > 50);
+    fn test_bound_for_any_integer() {
+        // bound(0i8, 100i8, |i| i * i > 50i8);
+        assert_eq!(bound(0usize, 100usize, |i| i * i > 50usize), (7, 8));
     }
 
     #[test]
-    #[should_panic]
-    fn test_bound_usize_should_panic_when_not_ok_for_max() {
-        bound_usize(0, 5, |i| i * i > 50);
+    fn test_bound_when_minus() {
+        assert_eq!(bound(-100, -1, |i| i > -10), (-10, -9));
+        assert_eq!(bound(-100i128, -1i128, |i| i > -10i128), (-10i128, -9i128));
     }
 }
