@@ -131,6 +131,26 @@ where
     (ng, ok)
 }
 
+pub fn bound_integer<T,F>(ng_min: T, ok_max: T, condition: F) -> (T, T)
+where
+    T: num::Integer + num::Signed,
+    F: Fn(T) -> bool,
+{
+    assert!(condition(ok_max));
+    assert!(!condition(ng_min));
+    let mut ng = ng_min;
+    let mut ok = ok_max;
+    while (ok - ng).abs() > T::one() {
+        let mid = (ng + ok).div(2); // expected type parameter `T`, found integer
+        if condition(mid) {
+            ok = mid;
+        } else {
+            ng = mid;
+        }
+    }
+    (ng, ok)
+}
+
 #[cfg(test)]
 mod tests {
     use crate::search::{bound, bound_usize};
