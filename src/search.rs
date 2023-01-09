@@ -84,6 +84,8 @@ pub fn bound<F>(ng_min: isize, ok_max: isize, condition: F) -> (isize, isize)
 where
     F: Fn(isize) -> bool,
 {
+    assert!(condition(ok_max));
+    assert!(!condition(ng_min));
     let mut ng = ng_min;
     let mut ok = ok_max;
     while (ok - ng).abs() > 1 {
@@ -95,4 +97,65 @@ where
         }
     }
     (ng, ok)
+}
+
+///
+/// Return pair of
+/// ( maximum number i in F(i) = false,
+///   minimum number j in F(j) = true)
+/// ```
+/// use competitive_tools_rust::search::bound_usize;
+/// assert_eq!(bound_usize(0, 100, |i| i * i >= 48), (6, 7));
+/// assert_eq!(bound_usize(0, 100, |i| i * i >  48), (6, 7));
+/// assert_eq!(bound_usize(0, 100, |i| i * i >= 49), (6, 7));
+/// assert_eq!(bound_usize(0, 100, |i| i * i >  49), (7, 8));
+/// assert_eq!(bound_usize(0, 100, |i| i * i >= 50), (7, 8));
+/// assert_eq!(bound_usize(0, 100, |i| i * i >  50), (7, 8));
+/// ```
+pub fn bound_usize<F>(ng_min: usize, ok_max: usize, condition: F) -> (usize, usize)
+where
+    F: Fn(usize) -> bool,
+{
+    assert!(condition(ok_max));
+    assert!(!condition(ng_min));
+    let mut ng = ng_min;
+    let mut ok = ok_max;
+    while ok - ng > 1 {
+        let mid = (ng + ok) / 2;
+        if condition(mid) {
+            ok = mid;
+        } else {
+            ng = mid;
+        }
+    }
+    (ng, ok)
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::search::{bound, bound_usize};
+
+    #[test]
+    #[should_panic]
+    fn test_bound_should_panic_when_not_ng_for_min() {
+        bound(50, 100, |i| i * i > 50);
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_bound_should_panic_when_not_ok_for_max() {
+        bound(0, 5, |i| i * i > 50);
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_bound_usize_should_panic_when_not_ng_for_min() {
+        bound_usize(50, 100, |i| i * i > 50);
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_bound_usize_should_panic_when_not_ok_for_max() {
+        bound_usize(0, 5, |i| i * i > 50);
+    }
 }
