@@ -93,11 +93,13 @@ pub fn sieve_of_eratosthenes(max_n: usize) -> Vec<usize> {
     prime_numbers
 }
 
+#[deprecated(note = "Please use usize::abs_diff, stabilized in Rust 1.60")]
 pub trait AbsDiff: Copy {
     /// Calc absolute difference
     fn abs_diff(self, other: Self) -> Self;
 }
 
+#[allow(deprecated)]
 impl AbsDiff for usize {
     /// Calc absolute difference
     /// It's similar to
