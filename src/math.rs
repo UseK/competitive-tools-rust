@@ -142,11 +142,7 @@ impl Gcd for usize {
     /// ```
     fn gcd(self, other: Self) -> Self {
         fn rec(a: usize, b: usize) -> usize {
-            if b == 0 {
-                a
-            } else {
-                rec(b, a % b)
-            }
+            if b == 0 { a } else { rec(b, a % b) }
         }
         rec(self, other)
     }
