@@ -22,7 +22,7 @@ impl Bitset for usize {
     /// assert_eq!(5.is_bit_on(3), false);
     /// ```
     fn is_bit_on(&self, digit: usize) -> bool {
-        self >> digit & 1 == 1
+        (self >> digit) & 1 == 1
     }
 
     fn to_bit_vec(&self, len: usize) -> Vec<bool> {
