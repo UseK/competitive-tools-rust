@@ -115,11 +115,7 @@ impl AbsDiff for usize {
     /// assert_eq!(10.abs_diff(100), 90);
     /// ```
     fn abs_diff(self, other: Self) -> Self {
-        if self < other {
-            other - self
-        } else {
-            self - other
-        }
+        self.abs_diff(other)
     }
 }
 
